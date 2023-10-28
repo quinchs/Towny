@@ -328,7 +328,7 @@ public class Nation extends Government {
 	
 	public void setTaxExempt(List<Town> taxExempt) {
 		
-		this.taxExempt = towns;
+		this.taxExempt = taxExempt;
 	}
 
 	public List<Nation> getMutualAllies() {

@@ -123,6 +123,7 @@ public class NationCommand extends BaseCommand implements CommandExecutor {
 		"toggle",
 		"invite",
 		"taxexempt",
+		"taxexemptlist",
 		"join",
 		"merge",
 		"townlist",
@@ -204,7 +205,7 @@ public class NationCommand extends BaseCommand implements CommandExecutor {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-
+		
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			Resident res = TownyUniverse.getInstance().getResident(player.getUniqueId());
@@ -263,11 +264,11 @@ public class NationCommand extends BaseCommand implements CommandExecutor {
 								return NameUtil.filterByStart(nation.getTowns().stream()
 									.filter(((Predicate<? super Town>) nation.getTaxExempt()::contains).negate())
 									.map(TownyObject::getName)
-									.collect(Collectors.toList()), args[1]);
+									.collect(Collectors.toList()), args[2]);
 							case "remove":
 								return NameUtil.filterByStart(nation.getTaxExempt().stream()
 									.map(TownyObject::getName)
-									.collect(Collectors.toList()), args[1]);
+									.collect(Collectors.toList()), args[2]);
 							default:
 								return Collections.emptyList();
 						}
@@ -507,6 +508,7 @@ public class NationCommand extends BaseCommand implements CommandExecutor {
 		case "taxexemptlist":
 			checkPermOrThrow(player, PermissionNodes.TOWNY_COMMAND_NATION_LEADER.getNode());
 			nationTaxExemptList(player, getPlayerNationOrNationFromArg(player, StringMgmt.remFirstArg(split)));
+			break;
 		case "new":
 		case "create":
 			checkPermOrThrow(player, PermissionNodes.TOWNY_COMMAND_NATION_NEW.getNode());
@@ -582,6 +584,7 @@ public class NationCommand extends BaseCommand implements CommandExecutor {
 		case "taxexempt":
 			checkPermOrThrow(player, PermissionNodes.TOWNY_COMMAND_NATION_LEADER.getNode());
 			nationTaxExempt(player, StringMgmt.remFirstArg(split));
+			break;
 		case "delete":
 			checkPermOrThrow(player, PermissionNodes.TOWNY_COMMAND_NATION_DELETE.getNode());
 			nationDelete(player, StringMgmt.remFirstArg(split));
