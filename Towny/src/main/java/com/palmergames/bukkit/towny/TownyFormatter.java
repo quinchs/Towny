@@ -790,6 +790,10 @@ public class TownyFormatter {
 			}
 
 			screen.addComponentOf("towntax", translator.of("status_splitter") + colourKey(translator.of("status_bank_town3")) + " " + colourKeyImportant(town.isTaxPercentage() ? town.getTaxes() + "%" : formatMoney(town.getTaxes())));
+		
+			if(town.hasNation()) {
+				screen.addComponentOf("nationtax", translator.of("status_splitter") + "Nation Tax: " + colourKeyImportant(formatMoney(town.getNationOrNull().calculateTaxFor(town))));
+			}
 		}
 	}
 
@@ -814,6 +818,8 @@ public class TownyFormatter {
 
 			screen.addComponentOf("nationtax", translator.of("status_splitter") + colourKey(translator.of("status_nation_tax")) + " " + colourKeyImportant(nation.isTaxPercentage() ? nation.getTaxes() + "%" : formatMoney(nation.getTaxes())));
 			screen.addComponentOf("nationConqueredTax", translator.of("status_splitter") + colourKey(translator.of("status_nation_conquered_tax")) + " " + colourKeyImportant(formatMoney(nation.getConqueredTax())));
+		
+			screen.addComponentOf("nationtaxincome",translator.of("status_splitter") +  "Tax Income: " +  colourKeyImportant(formatMoney(nation.calculateTaxIncome())));
 		}
 	}
 

@@ -9,6 +9,7 @@ import com.palmergames.bukkit.towny.TownySettings.NationLevel;
 import com.palmergames.bukkit.towny.TownyUniverse;
 import com.palmergames.bukkit.towny.event.TownyObjectFormattedNameEvent;
 import com.palmergames.bukkit.towny.event.nation.NationCalculateNationLevelNumberEvent;
+import com.palmergames.bukkit.towny.event.time.dailytaxes.TownPaysNationConqueredTaxEvent;
 import com.palmergames.bukkit.towny.exceptions.EmptyNationException;
 import com.palmergames.bukkit.towny.exceptions.TownyException;
 import com.palmergames.bukkit.towny.invites.Invite;
@@ -745,5 +746,35 @@ public class Nation extends Government {
 
 	public void playerBroadCastMessageToNation(Player player, String message) {
 		TownyMessaging.sendPrefixedNationMessage(this, Translatable.of("town_say_format", player.getName(), TownyComponents.stripClickTags(message)));
+	}
+	
+	public double calculateTaxFor(Town town) {
+		if(!this.towns.contains(town)) {
+			return 0;
+		}
+		
+		double taxAmount = getTaxes();
+		
+		if(this.isTaxPercentage) {
+			taxAmount = (town.getResidents().stream()
+				.map(v -> v.getAccount().getCachedBalance(true))
+				.reduce(town.getAccount().getCachedBalance(true), Double::sum) * 0.25) * (taxAmount / 100);
+
+			taxAmount = Math.min(taxAmount, getMaxPercentTaxAmount());
+		}
+
+		return taxAmount;
+	}
+	
+	public double calculateTaxIncome() {
+		double total = 0;
+		for(Town town : getTowns()) {
+			if(town.isCapital() || hasTaxExempt(town)) 
+				continue;
+			
+			total += calculateTaxFor(town);
+		}
+		
+		return total;
 	}
 }
