@@ -749,7 +749,7 @@ public class Nation extends Government {
 	}
 	
 	public double calculateTaxFor(Town town) {
-		if(!this.towns.contains(town)) {
+		if(!this.towns.contains(town) || town.isCapital() || getTaxExempt().contains(town)) {
 			return 0;
 		}
 		
